@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MaterialModule } from '../../material/material.module';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { routes } from '../../app.routes';
 
 export interface Espaco {
   nome: string;
@@ -19,6 +20,8 @@ export interface Espaco {
   imports: [MaterialModule]
 })
 export class GestaoEspacosComponent {
+ 
+
   displayedColumns: string[] = ['nome', 'tipo', 'capacidade', 'situacao', 'localizacao', 'acoes'];
 
   espacos: Espaco[] = [
@@ -38,7 +41,7 @@ export class GestaoEspacosComponent {
   }
 
   novoEspaco() {
-    console.log("Redirecionando para novo espaço...");
+   // routes.navigate(['/cadastro-espaco']);
   }
 
   editarEspaco(espaco: Espaco) {
