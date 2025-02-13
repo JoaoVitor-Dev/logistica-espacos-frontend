@@ -1,0 +1,19 @@
+.container {
+    max-width: 1500px;
+    margin: auto;
+    padding: 16px;
+  }
+  
+  .card {
+    margin-top: 16px;
+  }
+  
+  .spacer {
+    flex: 1;
+  }
+  
+  mat-chip {
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  
