@@ -4,6 +4,7 @@ import { MatTable, MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { EspacoService } from '../../services/espaco.service';
 import { Espaco } from '../../interfaces/espaco.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-gestao-espacos',
@@ -17,7 +18,10 @@ export class GestaoEspacosComponent implements OnInit {
   displayedColumns: string[] = ['nome', 'tipo', 'capacidade', 'situacao', 'localizacao', 'acoes'];
   espacos: Espaco[] = [];
 
-  constructor(private espacoService: EspacoService) {}
+  constructor(
+    private espacoService: EspacoService, 
+    private router: Router  
+  ) {}
 
   ngOnInit() {
     this.loadEspacos();
@@ -47,7 +51,8 @@ export class GestaoEspacosComponent implements OnInit {
   }
 
   novoEspaco() {
-    console.log('Novo espaço');
+    console.log("click")
+    this.router.navigate(['/cadastro-espaco']);
   }
 
   editarEspaco(espaco: Espaco) {
