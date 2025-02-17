@@ -1,16 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MaterialModule } from '../../material/material.module';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { routes } from '../../app.routes';
-
-export interface Espaco {
-  nome: string;
-  tipo: string;
-  capacidade: number;
-  situacao: string;
-  localizacao: string;
-}
+import { EspacoService } from '../../services/espaco.service';
+import { Espaco } from '../../interfaces/espaco.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-gestao-espacos',
@@ -19,21 +13,37 @@ export interface Espaco {
   standalone: true,
   imports: [MaterialModule]
 })
-export class GestaoEspacosComponent {
- 
 
+export class GestaoEspacosComponent implements OnInit {
   displayedColumns: string[] = ['nome', 'tipo', 'capacidade', 'situacao', 'localizacao', 'acoes'];
+  espacos: Espaco[] = [];
 
-  espacos: Espaco[] = [
-    { nome: 'Auditório Principal', tipo: 'Auditório', capacidade: 200, situacao: 'Ativo', localizacao: 'Bloco A, Térreo' },
-    { nome: 'Lab. Informática', tipo: 'Laboratório', capacidade: 30, situacao: 'Manutenção', localizacao: 'Bloco B, 2º Andar' }
-  ];
+  constructor(
+    private espacoService: EspacoService, 
+    private router: Router  
+  ) {}
+
+  ngOnInit() {
+    this.loadEspacos();
+  }
+
+  loadEspacos() {
+    this.espacoService.obterEspacos().subscribe({
+      next: (data) => {
+        console.log(data)
+        this.espacos = data;
+      },
+      error: (error) => {
+        console.error('Error fetching espacos:', error);
+      }
+    });
+  }
 
   getSituacaoColor(situacao: string): string {
-    switch (situacao) {
-      case 'Ativo':
+    switch (situacao.toUpperCase()) {
+      case 'ATIVO':
         return 'primary';
-      case 'Manutenção':
+      case 'MANUTENCAO':
         return 'warn';
       default:
         return 'accent';
@@ -41,14 +51,31 @@ export class GestaoEspacosComponent {
   }
 
   novoEspaco() {
-   // routes.navigate(['/cadastro-espaco']);
+    console.log("click")
+    this.router.navigate(['/cadastro-espaco']);
   }
 
   editarEspaco(espaco: Espaco) {
-    console.log("Editando:", espaco);
+    this.espacoService.updateEspaco(espaco).subscribe({
+      next: (response) => {
+        console.log('Espaco updated:', response);
+        this.loadEspacos();
+      },
+      error: (error) => {
+        console.error('Error updating espaco:', error);
+      }
+    });
   }
 
   excluirEspaco(espaco: Espaco) {
-    console.log("Excluindo:", espaco);
+    this.espacoService.deleteEspaco(espaco.id).subscribe({
+      next: () => {
+        console.log('Espaco deleted');
+        this.loadEspacos();
+      },
+      error: (error) => {
+        console.error('Error deleting espaco:', error);
+      }
+    });
   }
 }
