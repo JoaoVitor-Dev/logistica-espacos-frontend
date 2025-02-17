@@ -16,24 +16,19 @@ export class EspacoService {
     return this.http.get(this.apiUrl);
   } 
 
-  getEspacos(): Observable<Espaco[]> {
-    console.log(this.http.get<Espaco[]>(this.apiUrl))
-    return this.http.get<Espaco[]>(this.apiUrl);
-  }
-
-  getEspacoById(id: number): Observable<Espaco> {
+  obterEspacoPorId(id: number): Observable<Espaco> {
     return this.http.get<Espaco>(`${this.apiUrl}/${id}`);
   }
 
-  createEspaco(espaco: Espaco): Observable<Espaco> {
+  criarEspaco(espaco: Espaco): Observable<Espaco> {
     return this.http.post<Espaco>(this.apiUrl, espaco);
   }
 
-  updateEspaco(espaco: Espaco): Observable<Espaco> {
+  atualizarEspaco(espaco: Espaco): Observable<Espaco> {
     return this.http.put<Espaco>(`${this.apiUrl}/${espaco.id}`, espaco);
   }
 
-  deleteEspaco(id: number): Observable<void> {
+  deletarEspaco(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

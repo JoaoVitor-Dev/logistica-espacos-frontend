@@ -51,12 +51,11 @@ export class GestaoEspacosComponent implements OnInit {
   }
 
   novoEspaco() {
-    console.log("click")
     this.router.navigate(['/cadastro-espaco']);
   }
 
   editarEspaco(espaco: Espaco) {
-    this.espacoService.updateEspaco(espaco).subscribe({
+    this.espacoService.atualizarEspaco(espaco).subscribe({
       next: (response) => {
         console.log('Espaco updated:', response);
         this.loadEspacos();
@@ -68,7 +67,7 @@ export class GestaoEspacosComponent implements OnInit {
   }
 
   excluirEspaco(espaco: Espaco) {
-    this.espacoService.deleteEspaco(espaco.id).subscribe({
+    this.espacoService.deletarEspaco(espaco.id).subscribe({
       next: () => {
         console.log('Espaco deleted');
         this.loadEspacos();
