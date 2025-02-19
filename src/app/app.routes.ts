@@ -5,5 +5,6 @@ import { CadastroEspacoComponent } from './pages/cadastro-espaco/cadastro-espaco
 export const routes: Routes = [
   { path: 'gestao-espacos', component: GestaoEspacosComponent },
   { path: 'cadastro-espaco', component: CadastroEspacoComponent },
+  { path: 'cadastro-espaco/:id', component: CadastroEspacoComponent },
   { path: '', redirectTo: '/gestao-espacos', pathMatch: 'full' } 
 ];

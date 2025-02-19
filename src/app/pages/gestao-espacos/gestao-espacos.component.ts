@@ -59,19 +59,11 @@ export class GestaoEspacosComponent implements OnInit {
   }
 
   editarEspaco(espaco: Espaco) {
-    this.espacoService.atualizarEspaco(espaco).subscribe({
-      next: (response) => {
-        console.log('Espaco updated:', response);
-        this.loadEspacos();
-      },
-      error: (error) => {
-        console.error('Error updating espaco:', error);
-      }
-    });
+    this.router.navigate(['/cadastro-espaco', espaco.id]);;
   }
 
   excluirEspaco(espaco: Espaco) {
-   
+    
     if (espaco.status === "ATIVO"){
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
         width: '350px',
