@@ -5,13 +5,16 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { EspacoService } from '../../services/espaco.service';
 import { Espaco } from '../../interfaces/espaco.interface';
 import { Router } from '@angular/router';
+import {MatButtonModule} from '@angular/material/button';
+import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-gestao-espacos',
   templateUrl: './gestao-espacos.component.html',
   styleUrls: ['./gestao-espacos.component.css'],
   standalone: true,
-  imports: [MaterialModule]
+  imports: [MaterialModule, MatButtonModule]
 })
 
 export class GestaoEspacosComponent implements OnInit {
@@ -20,7 +23,8 @@ export class GestaoEspacosComponent implements OnInit {
 
   constructor(
     private espacoService: EspacoService, 
-    private router: Router  
+    private router: Router,
+    private dialog: MatDialog 
   ) {}
 
   ngOnInit() {
@@ -67,14 +71,28 @@ export class GestaoEspacosComponent implements OnInit {
   }
 
   excluirEspaco(espaco: Espaco) {
-    this.espacoService.deletarEspaco(espaco.id).subscribe({
-      next: () => {
-        console.log('Espaco deleted');
-        this.loadEspacos();
-      },
-      error: (error) => {
-        console.error('Error deleting espaco:', error);
-      }
-    });
+   
+    if (espaco.status === "ATIVO"){
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        width: '350px',
+        data: {
+          message: 'Deseja inativar este item?'
+        }
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.espacoService.deletarEspaco(espaco.id).subscribe({
+            next: () => {
+              console.log('Espaço('+espaco.id+') inativado');
+              this.loadEspacos();
+            },
+            error: (error) => {
+              console.error('Erro ao inativar espaço:', error);
+            }
+          });
+        }
+      });
+    }
   }
 }
