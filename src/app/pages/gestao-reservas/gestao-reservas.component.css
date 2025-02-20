@@ -2,11 +2,12 @@
     max-width: 1500px;
     margin: auto;
     padding: 16px;
-    
+  
   }
   
   .card {
     margin-top: 16px;
+    background-color: #FFFFFF;
   }
   
   .spacer {

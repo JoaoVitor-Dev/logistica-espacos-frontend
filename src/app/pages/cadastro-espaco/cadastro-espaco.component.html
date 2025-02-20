@@ -1,4 +1,4 @@
-<!-- cadastro-espaco.component.html -->
+
 <div class="container">
   <mat-card>
     <mat-card-header>
@@ -99,7 +99,7 @@
           <button mat-button type="button" color="warn" (click)="onCancel()">
             Cancelar
           </button>
-          <button mat-raised-button type="submit" color="primary" 
+          <button mat-raised-button (click)="novoEspaco()" type="submit" color="primary" 
                   [disabled]="!spaceForm.valid">
             Salvar Espaço
           </button>

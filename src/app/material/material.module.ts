@@ -11,6 +11,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatDialog,MatDialogActions,MatDialogClose,MatDialogContent,MatDialogRef,MatDialogTitle,
+} from '@angular/material/dialog';
 
 @NgModule({
   exports: [
@@ -25,7 +27,8 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
     MatChipsModule,
     MatAutocompleteModule,
     MatCheckboxModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatButtonModule
   ]
 })
 export class MaterialModule { }
