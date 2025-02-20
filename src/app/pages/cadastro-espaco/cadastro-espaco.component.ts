@@ -8,7 +8,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Espaco, RecursoDisponivel } from '../../interfaces/espaco.interface';
 import { MatSelect } from '@angular/material/select';
 
-
 @Component({
   selector: 'app-cadastro-espaco',
   templateUrl: './cadastro-espaco.component.html',
@@ -26,6 +25,15 @@ export class CadastroEspacoComponent implements OnInit {
 
   id!: number;
   spaceForm: FormGroup;
+
+ recursosBackendParaForm: { [key: string]: string } = {
+  'Projetor': 'projetor',
+  'Sistema de Som': 'som',
+  'Quadro Branco': 'quadro',
+  'Computadores': 'computadores',
+  'Ar Condicionado': 'ar_condicionado',
+  'Outros': 'outros'
+ };
 
   constructor(
     private fb: FormBuilder,
@@ -99,14 +107,25 @@ export class CadastroEspacoComponent implements OnInit {
           ar_condicionado: [false],
           outros: [false]
         });
-  
+
         if (espaco.recursosDisponiveis && espaco.recursosDisponiveis.length > 0) {
+          Object.keys(recursos.controls).forEach(key => {
+            recursos.get(key)?.setValue(false);
+          });
+          
           espaco.recursosDisponiveis.forEach(recurso => {
-            const chaveRecurso = this.availableResources.find(r => 
-              r.label.toLowerCase() === recurso.nome.toLowerCase())?.value;
+            const nomeRecurso = recurso.nome.trim();
+            const chaveForm = this.recursosBackendParaForm[nomeRecurso] || 
+                              this.recursosBackendParaForm[nomeRecurso.toLowerCase()] ||
+                              nomeRecurso.toLowerCase().replace(/\s+/g, '_');
             
-            if (chaveRecurso && recursos.get(chaveRecurso)) {
-              recursos.get(chaveRecurso)?.setValue(true);
+            console.log(`Tentando mapear recurso "${nomeRecurso}" para "${chaveForm}"`);
+            
+            if (recursos.get(chaveForm)) {
+              recursos.get(chaveForm)?.setValue(true);
+              console.log(`Checkbox "${chaveForm}" marcado como selecionado`);
+            } else {
+              console.log(`Não foi possível encontrar controle para "${chaveForm}"`);
             }
           });
         }
@@ -199,12 +218,12 @@ export class CadastroEspacoComponent implements OnInit {
   
       if (this.id) {
         payload.id = this.id;
-        
-        this.espacoService.atualizarEspaco(payload as Espaco).subscribe({
+        console.log(payload)
+        this.espacoService.atualizarEspaco(payload as any).subscribe({
           next: (response) => {
             console.log('Espaço atualizado com sucesso:', response);
             this.spaceForm.reset();
-            this.router.navigate(['/gestao-espacos']);
+            this.router.navigate(['/']);
           },
           error: (error) => {
             console.error('Erro ao atualizar espaço:', error);
@@ -215,7 +234,7 @@ export class CadastroEspacoComponent implements OnInit {
           next: (response) => {
             console.log('Espaço criado com sucesso:', response);
             this.spaceForm.reset();
-            this.router.navigate(['/gestao-espacos']);
+            this.router.navigate(['/']);
           },
           error: (error) => {
             console.error('Erro ao criar espaço:', error);
@@ -259,6 +278,6 @@ export class CadastroEspacoComponent implements OnInit {
 
   onCancel(): void {
     this.spaceForm.reset();
-    this.router.navigate(['/gestao-espacos']);
+    this.router.navigate(['/']);
   }
 }
