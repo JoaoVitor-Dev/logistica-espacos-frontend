@@ -64,50 +64,91 @@ export class CadastroEspacoComponent implements OnInit {
     });
   }
 
+  carregarDadosEspaco(id: number) {
+    const formatarParaDataBrasileira = (dateStr: string): Date => {
+      if (!dateStr) throw new Error("Data inválida");
+      const [ano, mes, dia] = dateStr.split('-').map(Number);
+      return new Date(ano, mes - 1, dia);
+    };
+  
+    const mapearTipoParaSelect = (tipo: string): string => {
+      const tipoMap: { [key: string]: string } = {
+        'SALA_AULA': 'sala_aula',
+        'AUDITORIO': 'auditorio',
+        'LABORATORIO': 'laboratorio'
+      };
+      return tipoMap[tipo] || tipo.toLowerCase();
+    };
+  
+    const mapearStatusParaSelect = (status: string): string => {
+      const statusMap: { [key: string]: string } = {
+        'ATIVO': 'ativo',
+        'INATIVO': 'inativo',
+        'MANUTENCAO': 'manutencao'
+      };
+      return statusMap[status] || status.toLowerCase();
+    };
+  
+    this.espacoService.obterEspacoPorId(id).subscribe({
+      next: (espaco) => {
+        const recursos = this.fb.group({
+          projetor: [false],
+          som: [false],
+          quadro: [false],
+          computadores: [false],
+          ar_condicionado: [false],
+          outros: [false]
+        });
+  
+        if (espaco.recursosDisponiveis && espaco.recursosDisponiveis.length > 0) {
+          espaco.recursosDisponiveis.forEach(recurso => {
+            const chaveRecurso = this.availableResources.find(r => 
+              r.label.toLowerCase() === recurso.nome.toLowerCase())?.value;
+            
+            if (chaveRecurso && recursos.get(chaveRecurso)) {
+              recursos.get(chaveRecurso)?.setValue(true);
+            }
+          });
+        }
+  
+        const tipoMapeado = mapearTipoParaSelect(espaco.tipo);
+        const statusMapeado = mapearStatusParaSelect(espaco.status);
+  
+        this.spaceForm.patchValue({
+          name: espaco.nome,
+          description: espaco.descricao,
+          type: tipoMapeado,
+          capacity: espaco.capacidade,
+          status: statusMapeado,
+          location: espaco.localizacao,
+          registrationDate: formatarParaDataBrasileira(espaco.dataCadastro),
+          procedureDate: formatarParaDataBrasileira(espaco.dataProcedimento),
+          additionalNotes: espaco.notasAdicionais,
+          resources: recursos.value
+        });
+  
+        console.log('Formulário preenchido:', this.spaceForm.value);
+        console.log('Tipo mapeado:', tipoMapeado);
+        console.log('Status mapeado:', statusMapeado);
+      },
+      error: (error) => {
+        console.error('Erro ao carregar dados do espaço:', error);
+      }
+    });
+  }
 
-carregarDadosEspaco(id: number) {
- 
-  const formatarParaDataBrasileira = (dateStr: string): Date => {
-    if (!dateStr) throw new Error("Data inválida");
-
-    const [ano, mes, dia] = dateStr.split('-').map(Number);
-    return new Date(ano, mes - 1, dia);
-};
-   
-  this.espacoService.obterEspacoPorId(id).subscribe({
-    next: (espaco) => {
-      console.log(espaco);
-      this.spaceForm.patchValue({
-        name: espaco.nome,
-        description: espaco.descricao,
-        capacity: espaco.capacidade,
-        status: espaco.status,
-        location: espaco.localizacao,
-        registrationDate: formatarParaDataBrasileira(espaco.dataCadastro),
-        procedureDate: formatarParaDataBrasileira(espaco.dataProcedimento),
-        additionalNotes: espaco.notasAdicionais,
-      });
-
-      this.selecionarTipo(espaco.tipo);
-    },
-    error: (error) => {
-      console.error('Erro ao carregar dados do espaço:', error);
-    }
-  });
-}
   selecionarTipo(tipo: string): void {
     const tipoExistente = this.spaceTypes.find(t => t.value === tipo);
     if (tipoExistente) {
+      console.log(tipoExistente.value)
       this.spaceForm.patchValue({ type: tipoExistente.value });
     }
   }
 
- 
-
   novoEspaco(): void {
     if (this.spaceForm.valid) {
       const formValues = this.spaceForm.value;
-
+  
       const recursosSelecionados: RecursoDisponivel[] = Object.entries(formValues.resources)
         .filter(([_, isSelected]) => isSelected)
         .map(([resourceKey, _], index) => {
@@ -118,7 +159,7 @@ carregarDadosEspaco(id: number) {
             descricao: `Recurso ${resourceInfo?.label || resourceKey} disponível no espaço`
           };
         });
-
+  
       const mapearTipo = (type: string): string => {
         const typeMap: { [key: string]: string } = {
           'sala_aula': 'SALA_AULA',
@@ -127,7 +168,13 @@ carregarDadosEspaco(id: number) {
         };
         return typeMap[type] || type.toUpperCase();
       };
-
+  
+      const formatarData = (date: Date): string => {
+        if (!date) return '';
+        const dateObj = new Date(date);
+        return dateObj.toISOString().split('T')[0];
+      };
+  
       const mapearStatus = (status: string): string => {
         const statusMap: { [key: string]: string } = {
           'ativo': 'ATIVO',
@@ -136,14 +183,8 @@ carregarDadosEspaco(id: number) {
         };
         return statusMap[status] || status.toUpperCase();
       };
-
-      const formatarData = (date: Date): string => {
-        if (!date) return '';
-        const dateObj = new Date(date);
-        return dateObj.toISOString().split('T')[0];
-      };
-
-      const payload: Omit<Espaco, 'id'> = {
+  
+      const payload: Partial<Espaco> = {
         nome: formValues.name,
         tipo: mapearTipo(formValues.type),
         capacidade: formValues.capacity,
@@ -155,17 +196,32 @@ carregarDadosEspaco(id: number) {
         dataProcedimento: formatarData(formValues.procedureDate),
         notasAdicionais: formValues.additionalNotes || ''
       };
-
-      this.espacoService.criarEspaco(payload as any).subscribe({
-        next: (response) => {
-          console.log('Espaço criado com sucesso:', response);
-          this.spaceForm.reset();
-          this.router.navigate(['/gestao-espacos']);
-        },
-        error: (error) => {
-          console.error('Erro ao criar espaço:', error);
-        }
-      });
+  
+      if (this.id) {
+        payload.id = this.id;
+        
+        this.espacoService.atualizarEspaco(payload as Espaco).subscribe({
+          next: (response) => {
+            console.log('Espaço atualizado com sucesso:', response);
+            this.spaceForm.reset();
+            this.router.navigate(['/gestao-espacos']);
+          },
+          error: (error) => {
+            console.error('Erro ao atualizar espaço:', error);
+          }
+        });
+      } else {
+        this.espacoService.criarEspaco(payload as any).subscribe({
+          next: (response) => {
+            console.log('Espaço criado com sucesso:', response);
+            this.spaceForm.reset();
+            this.router.navigate(['/gestao-espacos']);
+          },
+          error: (error) => {
+            console.error('Erro ao criar espaço:', error);
+          }
+        });
+      }
     } else {
       Object.keys(this.spaceForm.controls).forEach(key => {
         const control = this.spaceForm.get(key);
