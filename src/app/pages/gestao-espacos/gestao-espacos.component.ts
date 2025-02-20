@@ -62,9 +62,8 @@ export class GestaoEspacosComponent implements OnInit {
     this.router.navigate(['/cadastro-espaco', espaco.id]);;
   }
 
-  excluirEspaco(espaco: Espaco) {
-    
-    if (espaco.status === "ATIVO"){
+  excluirEspaco(espaco: Espaco) { 
+    if (espaco.status != "INATIVO"){
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
         width: '350px',
         data: {
