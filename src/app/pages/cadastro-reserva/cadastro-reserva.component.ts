@@ -28,7 +28,7 @@ import { MatSelect } from '@angular/material/select';
 export class CadastroReservaComponent implements OnInit {
 
   id!: number;
-  spaceForm!: FormGroup;
+  reservationForm!: FormGroup;
 
   constructor(
     private fb: FormBuilder,
@@ -41,7 +41,7 @@ export class CadastroReservaComponent implements OnInit {
     throw new Error('Method not implemented.');
   }
   onCancel() {
-    this.spaceForm.reset();
+    this.reservationForm.reset();
     this.router.navigate(['/']);
   }
   onSubmit() {
@@ -49,24 +49,18 @@ export class CadastroReservaComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.spaceForm = this.fb.group({
-      name: ['', Validators.required],
-      description: ['', Validators.required],
-      type: ['', Validators.required],
-      capacity: ['', [Validators.required, Validators.min(1)]],
-      resources: this.fb.group({
-        projetor: [false],
-        som: [false],
-        quadro: [false],
-        computadores: [false],
-        ar_condicionado: [false],
-        outros: [false],
-      }),
-      registrationDate: ['', Validators.required],
-      procedureDate: ['', Validators.required],
-      status: ['', Validators.required],
-      location: ['', Validators.required],
-      additionalNotes: [''],
+    this.reservationForm = this.fb.group({
+      space: ['', Validators.required],
+      nameEvent: ['', Validators.required],
+      typeEvent: ['', Validators.required],
+      registrationReserve: ['', Validators.required],
+      period: ['', Validators.required],
+      starTime: ['', Validators.required],
+      endTime: ['', Validators.required],
+      situation: ['', Validators.required],
+      responsability: ['', Validators.required],
+      observation: [''] // Optional field - no validator required
     });
   }
+  
 }

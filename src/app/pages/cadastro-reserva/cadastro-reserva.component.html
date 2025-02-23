@@ -1,4 +1,3 @@
-
 <div class="container">
   <mat-card>
     <mat-card-header>
@@ -6,11 +5,11 @@
     </mat-card-header>
 
     <mat-card-content>
-      <form [formGroup]="spaceForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="reservationForm" (ngSubmit)="onSubmit()">
         <div class="form-grid">
           <mat-form-field class="col-span-2">
             <mat-label>Espaço</mat-label>
-            <mat-select formControlName="status" required>
+            <mat-select formControlName="space" required>
               <!-- <mat-option *ngFor="let status of statusOptions" [value]="status.value">
                 {{status.label}}
               </mat-option> -->
@@ -19,12 +18,12 @@
 
           <mat-form-field>
             <mat-label>Nome do Evento</mat-label>
-            <input matInput formControlName="location" required>
+            <input matInput formControlName="nameEvent" required>
           </mat-form-field>
 
           <mat-form-field>
             <mat-label>Tipo de Evento</mat-label>
-            <mat-select formControlName="status" required>
+            <mat-select formControlName="typeEvent" required>
               <!-- <mat-option *ngFor="let status of statusOptions" [value]="status.value">
                 {{status.label}}
               </mat-option> -->
@@ -33,40 +32,36 @@
 
           <mat-form-field>
             <mat-label>Data da Reserva</mat-label>
-            <input matInput [matDatepicker]="regPicker" formControlName="registrationDate" required>
-            <mat-datepicker-toggle matSuffix [for]="regPicker"></mat-datepicker-toggle>
-            <mat-datepicker #regPicker></mat-datepicker>
+            <input matInput [matDatepicker]="datePicker" formControlName="registrationReserve" required>
+            <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+            <mat-datepicker #datePicker></mat-datepicker>
           </mat-form-field>
 
           <mat-form-field>
             <mat-label>Período</mat-label>
-            <mat-select formControlName="type" required>
+            <mat-select formControlName="period" required>
               <!-- <mat-option *ngFor="let type of spaceTypes" [value]="type.value">
                 {{type.label}}
               </mat-option> -->
             </mat-select>
-            <mat-error *ngIf="spaceForm.get('type')?.errors?.['required']">
+            <mat-error *ngIf="reservationForm.get('type')?.errors?.['required']">
               Tipo é obrigatório
             </mat-error>
           </mat-form-field>
 
           <mat-form-field>
             <mat-label>Horário de Início</mat-label>
-            <input matInput [matDatepicker]="regPicker" formControlName="registrationDate" required>
-            <mat-datepicker-toggle matSuffix [for]="regPicker"></mat-datepicker-toggle>
-            <mat-datepicker #regPicker></mat-datepicker>
+            <input matInput type="time" formControlName="starTime" required>
           </mat-form-field>
 
           <mat-form-field>
             <mat-label>Horário de Término</mat-label>
-            <input matInput [matDatepicker]="procPicker" formControlName="procedureDate" required>
-            <mat-datepicker-toggle matSuffix [for]="procPicker"></mat-datepicker-toggle>
-            <mat-datepicker #procPicker></mat-datepicker>
+            <input matInput type="time" formControlName="endTime" required>
           </mat-form-field>
 
           <mat-form-field>
             <mat-label>Situação</mat-label>
-            <mat-select formControlName="status" required>
+            <mat-select formControlName="situation" required>
               <!-- <mat-option *ngFor="let status of statusOptions" [value]="status.value">
                 {{status.label}}
               </mat-option> -->
@@ -75,13 +70,13 @@
 
           <mat-form-field>
             <mat-label>Responsável</mat-label>
-            <input matInput formControlName="location" 
-                   placeholder="Andar, bloco, número da sala" required>
+            <input matInput formControlName="responsability" 
+                   placeholder="Nome do responsável" required>
           </mat-form-field>
 
           <mat-form-field class="col-span-2">
             <mat-label>Observações Adicionais</mat-label>
-            <textarea matInput formControlName="additionalNotes" 
+            <textarea matInput formControlName="observation" 
                       placeholder="Informações extras sobre o espaço" rows="4">
             </textarea>
           </mat-form-field>
@@ -92,8 +87,8 @@
             Cancelar
           </button>
           <button mat-raised-button (click)="salvarReserva()" type="submit" color="primary" 
-                  [disabled]="!spaceForm.valid">
-            Salvar Espaço
+                  [disabled]="!reservationForm.valid">
+            Salvar Reserva
           </button>
         </div>
       </form>
