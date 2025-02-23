@@ -1,0 +1,108 @@
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem;
+    min-height: 100vh;
+    background-color: #F7FBFC;
+  }
+  
+  mat-card {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #FFFFFF;
+  }
+  
+  mat-card-header {
+    margin-bottom: 2rem;
+  }
+  
+  mat-card-title {
+    font-size: 1.5rem;
+    color: #333;
+  }
+  
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .col-span-2 {
+    grid-column: span 2;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  
+  .resources-section {
+    margin: 1rem 0;
+  }
+  
+  .resources-section .mat-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.9rem;
+  }
+  
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+  
+    mat-card {
+      padding: 1rem;
+    }
+  
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .col-span-2 {
+      grid-column: auto;
+    }
+  
+    .checkbox-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .button-group {
+      flex-direction: column-reverse;
+    }
+  
+    .button-group button {
+      width: 100%;
+    }
+  }
+  
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  mat-checkbox {
+    margin: 0.5rem 0;
+  }
