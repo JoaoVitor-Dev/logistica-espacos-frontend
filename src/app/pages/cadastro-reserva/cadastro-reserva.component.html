@@ -10,10 +10,13 @@
           <mat-form-field class="col-span-2">
             <mat-label>Espaço</mat-label>
             <mat-select formControlName="space" required>
-              <!-- <mat-option *ngFor="let status of statusOptions" [value]="status.value">
-                {{status.label}}
-              </mat-option> -->
+              <mat-option *ngFor="let espaco of espacos" [value]="espaco.id">
+                {{espaco.nome}} - {{espaco.localizacao}}
+              </mat-option>
             </mat-select>
+            <mat-error *ngIf="reservationForm.get('space')?.errors?.['required']">
+              Espaço é obrigatório
+            </mat-error>
           </mat-form-field>
 
           <mat-form-field>
@@ -51,7 +54,7 @@
 
           <mat-form-field>
             <mat-label>Horário de Início</mat-label>
-            <input matInput type="time" formControlName="starTime" required>
+            <input matInput type="time" formControlName="startTime" required>
           </mat-form-field>
 
           <mat-form-field>

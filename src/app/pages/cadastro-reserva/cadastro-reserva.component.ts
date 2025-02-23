@@ -12,6 +12,7 @@ import { EspacoService } from '../../services/espaco.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Reserva } from '../../interfaces/reserva.interface';
 import { MatSelect } from '@angular/material/select';
+import { Espaco } from '../../interfaces/espaco.interface';
 
 @Component({
   selector: 'app-cadastro-reserva',
@@ -29,6 +30,8 @@ export class CadastroReservaComponent implements OnInit {
 
   id!: number;
   reservationForm!: FormGroup;
+
+  espacos: Espaco[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -55,12 +58,24 @@ export class CadastroReservaComponent implements OnInit {
       typeEvent: ['', Validators.required],
       registrationReserve: ['', Validators.required],
       period: ['', Validators.required],
-      starTime: ['', Validators.required],
+      startTime: ['', Validators.required],
       endTime: ['', Validators.required],
       situation: ['', Validators.required],
       responsability: ['', Validators.required],
-      observation: [''] // Optional field - no validator required
+      observation: [''] 
+    });
+    this.carregarEspacos();
+  }
+
+  carregarEspacos(){
+    this.espacoService.obterEspacos().subscribe({
+      next: (data) => {
+        console.log(data)
+        this.espacos = data;
+      },
+      error: (error) => {
+        console.error('Error fetching espacos:', error);
+      }
     });
   }
-  
 }
