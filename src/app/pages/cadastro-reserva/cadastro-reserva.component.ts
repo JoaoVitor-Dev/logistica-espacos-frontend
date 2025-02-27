@@ -33,6 +33,32 @@ export class CadastroReservaComponent implements OnInit {
 
   espacos: Espaco[] = [];
 
+  tiposEvento: { [key: string]: string } = {
+    'Reunião': 'REUNIAO',
+    'Workshop': 'WORKSHOP',
+    'Seminário': 'SEMINARIO',
+    'Palestra': 'PALESTRA',
+    'Outro': 'OUTRO',
+   };
+
+   periodoEvento: {[key: string]: string } = {
+    'Matutino': 'MANHA',
+    'Vespertino': 'TARDE',
+    'Noturno': 'NOITE',
+    'Integral': 'INTEGRAL',
+   };
+
+   status: {[key: string]: string } = {
+    'Pendente': 'PENDENTE',
+    'Confirmada': 'CONFIRMADA',
+    'Cancelada': 'CANCELADA',
+    'Concluída': 'CONCLUIDA',
+   };
+
+   tiposEventoArray: { chave: string, valor: string }[] = [];
+   periodoEventoArray : { chave: string, valor: string }[] = [];
+   statusArray:  { chave: string, valor: string }[] = [];
+
   constructor(
     private fb: FormBuilder,
     private espacoService: EspacoService,
@@ -65,6 +91,9 @@ export class CadastroReservaComponent implements OnInit {
       observation: [''] 
     });
     this.carregarEspacos();
+    this.carregarTiposEvento();
+    this.carregarPeriodos();
+    this.carregarStatus();
   }
 
   carregarEspacos(){
@@ -76,6 +105,24 @@ export class CadastroReservaComponent implements OnInit {
       error: (error) => {
         console.error('Error fetching espacos:', error);
       }
+    });
+  }
+
+  carregarTiposEvento(){
+    this.tiposEventoArray = Object.entries(this.tiposEvento).map(([chave, valor]) => {
+      return { chave, valor };
+    });
+  }
+
+  carregarPeriodos(){
+    this.periodoEventoArray = Object.entries(this.periodoEvento).map(([chave, valor]) => {
+      return { chave, valor };
+    });
+  }
+
+  carregarStatus(){
+    this.statusArray = Object.entries(this.status).map(([chave, valor]) => {
+      return { chave, valor };
     });
   }
 }
