@@ -12,6 +12,7 @@ import { EspacoService } from '../../services/espaco.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Reserva } from '../../interfaces/reserva.interface';
 import { MatSelect } from '@angular/material/select';
+import { Espaco } from '../../interfaces/espaco.interface';
 
 @Component({
   selector: 'app-cadastro-reserva',
@@ -28,7 +29,9 @@ import { MatSelect } from '@angular/material/select';
 export class CadastroReservaComponent implements OnInit {
 
   id!: number;
-  spaceForm!: FormGroup;
+  reservationForm!: FormGroup;
+
+  espacos: Espaco[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -41,7 +44,7 @@ export class CadastroReservaComponent implements OnInit {
     throw new Error('Method not implemented.');
   }
   onCancel() {
-    this.spaceForm.reset();
+    this.reservationForm.reset();
     this.router.navigate(['/']);
   }
   onSubmit() {
@@ -49,24 +52,30 @@ export class CadastroReservaComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.spaceForm = this.fb.group({
-      name: ['', Validators.required],
-      description: ['', Validators.required],
-      type: ['', Validators.required],
-      capacity: ['', [Validators.required, Validators.min(1)]],
-      resources: this.fb.group({
-        projetor: [false],
-        som: [false],
-        quadro: [false],
-        computadores: [false],
-        ar_condicionado: [false],
-        outros: [false],
-      }),
-      registrationDate: ['', Validators.required],
-      procedureDate: ['', Validators.required],
-      status: ['', Validators.required],
-      location: ['', Validators.required],
-      additionalNotes: [''],
+    this.reservationForm = this.fb.group({
+      space: ['', Validators.required],
+      nameEvent: ['', Validators.required],
+      typeEvent: ['', Validators.required],
+      registrationReserve: ['', Validators.required],
+      period: ['', Validators.required],
+      startTime: ['', Validators.required],
+      endTime: ['', Validators.required],
+      situation: ['', Validators.required],
+      responsability: ['', Validators.required],
+      observation: [''] 
+    });
+    this.carregarEspacos();
+  }
+
+  carregarEspacos(){
+    this.espacoService.obterEspacos().subscribe({
+      next: (data) => {
+        console.log(data)
+        this.espacos = data;
+      },
+      error: (error) => {
+        console.error('Error fetching espacos:', error);
+      }
     });
   }
 }
